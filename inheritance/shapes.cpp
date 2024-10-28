@@ -4,114 +4,58 @@
 
 using namespace std;
 
-class Parallelogram {
-
-    private:
-    double side;
-    double base;
-    double angle;// In degrees.
-
-    public:
-    Parallelogram(double side, double base, double angle) {
-        this->side = side;
-        this->base = base;
-        this->angle = angle;
-        cout << "Parallelogram constructor" << endl;
-    }
-    Parallelogram() : Parallelogram(10, 10, 90){}
-
-    double getSide() const {
-        return side;
+// Base class
+class Shape {
+public:
+    // Virtual function to be overridden by derived classes
+    virtual double area() const {
+        return 0;  // Default implementation
     }
 
-    void setSide(double value) {
-        side = value;
-    }
-
-    double getBase() const {
-        return base;
-    }
-
-    void setBase(double value) {
-        base = value;
-    }
-
-    double getAngle() const {
-        return angle;
-    }
-
-    void setAngle(double value) {
-        angle = value;
-    }
-
-    double getArea() {
-        double height = getSide() * sin(angle * M_PI/180);
-        return getBase() * height;
-    }
-    double getPerimeter() {
-        return 2 * (getBase() + getSide());
-    }
-    string getShapeName() {
-        return "Parallelogram";
-    }
+    virtual ~Shape() {}
 };
 
-/*
-    Overloading for the Paralellogram to get printed
-*/
-ostream& operator<<(ostream& out, Parallelogram& shape) {
-    // Since parallelogram is a constant the methods it can access must be constant as well
-    return out << shape.getShapeName() + "(" << shape.getSide() <<
-                ", " << shape.getBase() << ", " << shape.getAngle() <<
-                ")" <<endl;
-}
-
-
-class Rectangle : public Parallelogram {
- 
+// Derived class: Circle
+class Circle : public Shape {
+private:
+    double radius;
     
-    public:
-    Rectangle(double width, double height) : Parallelogram(height, width, 90) {
-        cout << "Rectangle constructor" << endl;
-    }
-    Rectangle() {}
+public:
+    Circle(double r) : radius(r) {}
 
-    string getShapeName() {
-        return "Rectangle";
+    // Override the area function for Circle
+    double area() const override {
+        return M_PI * radius * radius;  
     }
-
 };
 
+// Derived class: Rectangle
+class Rectangle : public Shape {
+private:
+    double width, height;
+    
+public:
+    Rectangle(double w, double h) : width(w), height(h) {}
 
+    // Override the area function for Rectangle
+    double area() const override {
+        return width * height;  // Area of a rectangle: width * height
+    }
+};
 
 int main() {
-    Parallelogram shape1 = Parallelogram(10, 25, 30);
-    cout << shape1;
-    cout << "Has area: " << shape1.getArea() << endl;
-    cout << "Has Perimeter: " << shape1.getPerimeter() << endl;
-    cout << "Shape: " << shape1.getShapeName() << endl;
+    // Create a pointer to base class Shape
+    Shape* shape;
 
-    Rectangle shape2 = Rectangle(15, 20);
-    cout << "==============\n";
-    cout << shape2;
-    cout << "Has area: " << shape2.getArea() << endl;
-    cout << "Has Perimeter: " << shape2.getPerimeter() << endl;
-    cout << "Shape: " << shape2.getShapeName() << endl;
+    // Create a Circle object and assign it to the Shape pointer
+    Circle circle(5.0);
+    shape = &circle;
+    cout << "Area of Circle: " << shape->area() << endl;  // Output: Area of Circle: 78.5398
 
+    // Create a Rectangle object and assign it to the Shape pointer
+    Rectangle rectangle(4.0, 6.0);
+    shape = &rectangle;
+    cout << "Area of Rectangle: " << shape->area() << endl;  // Output: Area of Rectangle: 24
 
-    // Parallelogram *shape3 = new Rectangle(10, 15);
-    // cout << "==============\n";
-    // cout << "Has area: " << shape3->getArea() << endl;
-    // cout << "Has Perimeter: " << shape3->getPerimeter() << endl;
-    // cout << "Shape: " << shape3->getShapeName() << endl; 
-
-    // Parallelogram *shape4;
-    // shape4 = static_cast<Parallelogram *>(&shape2);
-    // cout << "==============\n";
-    // cout << "Has area: " << shape4->getArea() << endl;
-    // cout << "Has Perimeter: " << shape4->getPerimeter() << endl;
-    // cout << "Shape: " << shape4->getShapeName() << endl;
-
- 
-
+    return 0;
 }
